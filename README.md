@@ -11,6 +11,7 @@ Copyright (C) 2020 郭泽宇 <ze3kr@icloud.com>
 + 需要在 `config/Cache.php` 实现一个缓存类
 + 需要在 `config/Storage.php` 实现一个存储类
 + 需要配置 `config/Settings.php`
++ 需要将 `^/v2/` 重写到 `/index.php`
 
 ## 核心技术
 
