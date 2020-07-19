@@ -1,0 +1,28 @@
+{
+    "name": "bjut-hummer/backend",
+    "type": "project",
+    "homepage": "https://github.com/BJUT2020Summer/HelperNew",
+    "description": "HelperNew",
+    "keywords": ["bjut", "bot", "crawler", "university"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "ZE3kr",
+            "email": "ze3kr@icloud.com",
+            "homepage": "https://guozeyu.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "ext-json": "*",
+        "leoleoasd/zf_spider": "dev-master",
+        "slim/psr7": ">=1",
+        "slim/slim": ">=4",
+        "ext-gettext": "*",
+        "ext-curl": "*",
+        "ext-memcached": "*",
+        "ext-zlib": "*",
+        "ext-openssl": "*",
+        "ext-apcu": "*"
+    }
+}
