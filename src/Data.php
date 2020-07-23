@@ -76,12 +76,8 @@ class Data {
 	public const MORE_PAGE_FOOTER = [
 		'### 开源软件使用',
 		'##### GNU Affero GPL v3.0',
-		'+ ZE3kr/BjutHelper-MiniProgram',
-		'+ ZE3kr/BjutHelper-PHP',
+		'+ WildHelper/MiniProgram',
 		'##### MIT License',
-		'+ leoleoasd/zf_spider',
-		'+ slimphp/Slim',
-		'+ slimphp/Slim-Psr7',
 		'+ Tencent/weui',
 		'+ brix/crypto-js',
 		'+ nodeca/pako',
