@@ -29,6 +29,12 @@ class Settings
 	public const CLOUD_FUNCTION_AUTH = '8UZRhU9xsRfawoKMK3NjC3Rp3kKXVNZHAJ8uFsJ4gqgywJ2dtThkEbDfaiPahcwM';
 
 	/**
+	 * API 地址配置
+	 */
+	public const API_ENDPOINT = 'https://wild.applinzi.com/v2/';
+	public const API_MESSAGE = '服务器永不存储你的密码';
+
+	/**
 	 * 教务地址配置
 	 */
 	public const VPN_URL = 'https://example.com/prx/000/http/localhost/';

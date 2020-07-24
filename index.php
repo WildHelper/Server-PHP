@@ -110,7 +110,8 @@ $app->group('/v2', function (RouteCollectorProxy $app) use ($data, $resp) {
 			$resp->data = [
 				'default' => [
 					'name' => '默认',
-					'url' => 'https://wild.applinzi.com/v2/'
+					'url' => Settings::API_ENDPOINT,
+					'message' => Settings::API_MESSAGE,
 				]
 			];
 			return $response;
