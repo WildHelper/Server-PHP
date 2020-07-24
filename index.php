@@ -1,9 +1,9 @@
 <?php
 
-use BjutHelper\Data;
-use BjutHelper\Encryption;
-use BjutHelper\ResponseData;
-use BjutHelper\Settings;
+use WildHelper\Data;
+use WildHelper\Encryption;
+use WildHelper\ResponseData;
+use WildHelper\Settings;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 use Slim\Psr7\Response;
@@ -57,7 +57,7 @@ $app->group('/v2', function (RouteCollectorProxy $app) use ($data, $resp) {
 		$app->post('/subscribe/{course_id}', function (Request $request, Response $response, array $args) use ($data, $resp) {
 			set_time_limit(5);
 			$open = '';
-			$rawOpen = $request->getHeader('X-Bjut-Open');
+			$rawOpen = $request->getHeader('X-Wild-Open');
 			if (count($rawOpen) === 1 && $rawOpen[0] && $rawOpen[0] !== '[object Null]' && $rawOpen[0] !== '[object Undefined]') {
 				$open = Encryption::decrypt( Data::base64_url_decode($rawOpen[0]), Data::ENCRYPTION_KEY, true );
 			}
@@ -71,11 +71,11 @@ $app->group('/v2', function (RouteCollectorProxy $app) use ($data, $resp) {
 			$resp->data = new stdClass();
 			$resp->data->title = '截屏已经上报';
 			if ($stuId === Settings::DEMO_UID) {
-				$data->getCache()->set('BjutHelper::screenshot/' . $resp->open, 1, 60);
+				$data->getCache()->set('WildHelper::screenshot/' . $resp->open, 1, 60);
 				$resp->data->content = '统计数据禁止截屏，你因违反协议已被屏蔽使用课程统计 1 分钟。多次截屏将会被系统封号';
 			} else {
-				error_log( date('Y-m-d H:i:s').' '.$stuId.' '.$resp->open."\r\n", 3, "/opt/bjut/log/screenshot.txt");
-				$data->getCache()->set('BjutHelper::screenshot/' . $resp->open, 1, 3600);
+				error_log( date('Y-m-d H:i:s').' '.$stuId.' '.$resp->open."\r\n", 3, "/opt/wild/log/screenshot.txt");
+				$data->getCache()->set('WildHelper::screenshot/' . $resp->open, 1, 3600);
 				$resp->data->content = '统计数据禁止截屏，你因违反协议已被屏蔽使用课程统计 1 小时。多次截屏将会被系统封号';
 			}
 
@@ -159,14 +159,14 @@ $app->group('/v2', function (RouteCollectorProxy $app) use ($data, $resp) {
 			$open = '';
 			$prevOpen = '';
 			$subscribeCount = '你目前没有订阅任何未出分课程';
-			$rawOpen = $request->getHeader('X-Bjut-Open');
+			$rawOpen = $request->getHeader('X-Wild-Open');
 			if (count($rawOpen) === 1 && $rawOpen[0] && $rawOpen[0] !== '[object Null]' && $rawOpen[0] !== '[object Undefined]') {
 				$resp->data->open_status = 0; // 未绑定微信号
 				$open = Encryption::decrypt( Data::base64_url_decode($rawOpen[0]), Data::ENCRYPTION_KEY, true );
 			}
 			$userId = $data->getUserId();
 			if ($userId) {
-				$courses = $data->getStorage()->get('/opt/bjut/courses/'.$userId);
+				$courses = $data->getStorage()->get('/opt/wild/courses/'.$userId);
 				if (is_object($courses)) {
 					if (property_exists($courses, 'open')) {
 						$prevOpen = $courses->open;

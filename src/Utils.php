@@ -1,7 +1,7 @@
 <?php
 
 
-namespace BjutHelper;
+namespace WildHelper;
 
 
 use stdClass;

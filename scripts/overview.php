@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '../config/Settings.php';
 
-use BjutHelper\Settings;
+use WildHelper\Settings;
 
 if (
 	(isset($argv[1]) && $argv[1] === Settings::CLOUD_FUNCTION_AUTH) ||
@@ -13,5 +13,5 @@ if (
 	require_once __DIR__ . '../config/Storage.php';
 	require_once __DIR__ . '../src/Analyze.php';
 	require_once __DIR__ . '../config/Settings.php';
-	new BjutHelper\Analyze();
+	new WildHelper\Analyze();
 }

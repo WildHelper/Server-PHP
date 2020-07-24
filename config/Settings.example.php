@@ -1,7 +1,7 @@
 <?php
 
 
-namespace BjutHelper;
+namespace WildHelper;
 
 
 class Settings
@@ -29,8 +29,13 @@ class Settings
 	public const CLOUD_FUNCTION_AUTH = '8UZRhU9xsRfawoKMK3NjC3Rp3kKXVNZHAJ8uFsJ4gqgywJ2dtThkEbDfaiPahcwM';
 
 	/**
+	 * 教务地址配置
+	 */
+	public const VPN_URL = 'https://example.com/prx/000/http/localhost/';
+	public const BASE_URL = 'https://example.com/prx/000/http/gdjwgl.example.com/';
+
+	/**
 	 * VPN 账户设置
-	 * https://vpn.bjut.edu.cn/
 	 */
 	public const VPN_USERNAME = 'demo';
 	public const VPN_PASSWORD = 'password';

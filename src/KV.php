@@ -1,7 +1,7 @@
 <?php
 
 
-namespace BjutHelper;
+namespace WildHelper;
 
 
 interface KV {

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace BjutHelper;
+namespace WildHelper;
 
 
 class WeChat
@@ -63,27 +63,5 @@ class WeChat
 		curl_close($ch);
 
 		return $result;
-	}
-
-	//
-	private static function file_post_contents($url, $data, $username = null, $password = null)
-	{
-		$postdata = http_build_query($data);
-
-		$opts = array('http' =>
-			array(
-				'method'  => 'POST',
-				'header'  => 'Content-type: application/x-www-form-urlencoded',
-				'content' => $postdata
-			)
-		);
-
-		if($username && $password)
-		{
-			$opts['http']['header'] = ("Authorization: Basic " . base64_encode("$username:$password"));
-		}
-
-		$context = stream_context_create($opts);
-		return file_get_contents($url, false, $context);
 	}
 }

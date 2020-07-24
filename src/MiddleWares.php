@@ -1,16 +1,16 @@
 <?php
 
-use BjutHelper\APIs;
-use BjutHelper\Data;
-use BjutHelper\Encryption;
-use BjutHelper\EncryptionOld;
-use BjutHelper\Settings;
+use WildHelper\APIs;
+use WildHelper\Data;
+use WildHelper\Encryption;
+use WildHelper\EncryptionOld;
+use WildHelper\Settings;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Psr7\Headers;
 use Slim\Psr7\Response;
 
-define('BJUT_CONTENT_TYPE', 'application/json; charset=utf-8');
+define('WILD_CONTENT_TYPE', 'application/json; charset=utf-8');
 
 $ERROR_STATUS_CODE = 200;
 
@@ -43,13 +43,13 @@ $middleware = function ($request, $handler) use ($data, $resp, $ERROR_STATUS_COD
 		if (!is_null($authKey)) {
 			$data->decodeAuth($realAuth, $realUserId, $realPassword, false);
 		}
-		$userId = $request->getHeader('X-Bjut-User');
-		$rawOpen = $request->getHeader('X-Bjut-Open');
+		$userId = $request->getHeader('X-Wild-User');
+		$rawOpen = $request->getHeader('X-Wild-Open');
 
 		$auth = null;
 		if ( substr($uriPath, 0, 44) === '/v2/actions/'.Settings::CLOUD_FUNCTION_AUTH ) {
 			if (!is_null($realUserId) && !APIs::testShareScorePassword($realPassword)) {
-				$data->getCache()->set('BjutHelper::wait/'.$realUserId, 1, 10);
+				$data->getCache()->set('WildHelper::wait/'.$realUserId, 1, 10);
 			}
 			$ERROR_STATUS_CODE = 200;
 			$auth = $data->auth($authKey);
@@ -89,20 +89,20 @@ $middleware = function ($request, $handler) use ($data, $resp, $ERROR_STATUS_COD
 				$currentOpen = hash('sha256', $rawOpen[0], true);
 
 				if (!APIs::testShareScorePassword($realPassword)) {
-					$wait = $data->getCache()->get('BjutHelper::wait/'.$realUserId);
+					$wait = $data->getCache()->get('WildHelper::wait/'.$realUserId);
 					while ($wait) {
 						sleep(1);
-						$wait = $data->getCache()->get('BjutHelper::wait/'.$realUserId);
+						$wait = $data->getCache()->get('WildHelper::wait/'.$realUserId);
 					}
-					$data->getCache()->set('BjutHelper::wait/'.$realUserId, 1, 10);
+					$data->getCache()->set('WildHelper::wait/'.$realUserId, 1, 10);
 				}
 
 				$auth = $data->auth($authKey, null);
 
 				if (!$data->getApi()->isNoPassword() && is_string($auth)) {
-					$prevOpen = $data->getStorage()->get('/opt/bjut/open/'.$auth);
+					$prevOpen = $data->getStorage()->get('/opt/wild/open/'.$auth);
 					if (!$prevOpen) {
-						$data->getStorage()->set('/opt/bjut/open/'.$auth, $currentOpen);
+						$data->getStorage()->set('/opt/wild/open/'.$auth, $currentOpen);
 					} elseif ($currentOpen !== $prevOpen) {
 						$data->setStatus(false);
 						$data->addError((object)[
@@ -131,9 +131,9 @@ $middleware = function ($request, $handler) use ($data, $resp, $ERROR_STATUS_COD
 					'result' => null
 				];
 			}
-			$response = new Response($ERROR_STATUS_CODE, new Headers(['X-Bjut-Errors' => $data->getErrorCodes()]));
+			$response = new Response($ERROR_STATUS_CODE, new Headers(['X-Wild-Errors' => $data->getErrorCodes()]));
 			$response->getBody()->write(json_encode($return, JSON_UNESCAPED_UNICODE));
-			return $response->withHeader('Content-type', BJUT_CONTENT_TYPE);
+			return $response->withHeader('Content-type', WILD_CONTENT_TYPE);
 		}
 		if(substr($uriPath, 0, 4) === '/v2/') {
 			if (!isset($userId[0]) || $userId[0] === '[object Null]' || $userId[0] === '[object Undefined]') {
@@ -149,15 +149,15 @@ $middleware = function ($request, $handler) use ($data, $resp, $ERROR_STATUS_COD
 					'messages' => [],
 					'result' => null
 				];
-				$response = new Response($ERROR_STATUS_CODE, new Headers(['X-Bjut-Errors' => '1006']));
+				$response = new Response($ERROR_STATUS_CODE, new Headers(['X-Wild-Errors' => '1006']));
 				$response->getBody()->write(json_encode($return, JSON_UNESCAPED_UNICODE));
-				return $response->withHeader('Content-type', BJUT_CONTENT_TYPE);
+				return $response->withHeader('Content-type', WILD_CONTENT_TYPE);
 			}
 		}
 
 		if ( $uriPath === '/api/user/periodic' && $data->getApi()->isLoggedIn() ) {
-			$ret = $data->getStorage()->get('/opt/bjut/scores/'.$auth);
-			$courseSelect = $data->getStorage()->get('/opt/bjut/courses/' . $auth);
+			$ret = $data->getStorage()->get('/opt/wild/scores/'.$auth);
+			$courseSelect = $data->getStorage()->get('/opt/wild/courses/' . $auth);
 			if (is_object($ret) && is_object($courseSelect) && property_exists($ret, 'grade_term') && property_exists($courseSelect, 'terms')) {
 				$existingSemesters = [];
 				foreach ($ret->grade_term as $courses) {
@@ -180,7 +180,7 @@ $middleware = function ($request, $handler) use ($data, $resp, $ERROR_STATUS_COD
 						$existedSemesters[$term]->updated_time + 21600 < time()
 					) {
 						$terms = explode('-', $term);
-						error_log( date('Y-m-d H:i:s').' [Checking] '.$uriPath.': '.$auth.' '.json_encode($terms)."\r\n", 3, "/opt/bjut/log/log.txt");
+						error_log( date('Y-m-d H:i:s').' [Checking] '.$uriPath.': '.$auth.' '.json_encode($terms)."\r\n", 3, "/opt/wild/log/log.txt");
 						$data->getCourses($terms[0].'-'.$terms[1], $terms[2]);
 					}
 				}
@@ -191,9 +191,9 @@ $middleware = function ($request, $handler) use ($data, $resp, $ERROR_STATUS_COD
 
 		if(substr($uriPath, 0, 44) === '/v2/actions/'.Settings::CLOUD_FUNCTION_AUTH) {
 			if (!is_null($realUserId) && !APIs::testShareScorePassword($realPassword)) {
-				$data->getCache()->set('BjutHelper::wait/'.$realUserId, 1, 1);
+				$data->getCache()->set('WildHelper::wait/'.$realUserId, 1, 1);
 			}
-			$prevOpen = $data->getStorage()->get('/opt/bjut/open/'.$auth);
+			$prevOpen = $data->getStorage()->get('/opt/wild/open/'.$auth);
 			if (!$prevOpen || $data->getApi()->isNoPassword()) {
 				$return = (object)[
 					'success' => true,
@@ -213,7 +213,7 @@ $middleware = function ($request, $handler) use ($data, $resp, $ERROR_STATUS_COD
 			}
 		} else {
 			if (!is_null($realUserId) && !APIs::testShareScorePassword($realPassword)) {
-				$data->getCache()->set('BjutHelper::wait/'.$realUserId, 1, 1);
+				$data->getCache()->set('WildHelper::wait/'.$realUserId, 1, 1);
 			}
 
 			$return = (object)[
@@ -224,7 +224,7 @@ $middleware = function ($request, $handler) use ($data, $resp, $ERROR_STATUS_COD
 			];
 		}
 		if (!$data->getStatus()) {
-			$response = new Response($ERROR_STATUS_CODE, new Headers(['X-Bjut-Errors' => $data->getErrorCodes()]));
+			$response = new Response($ERROR_STATUS_CODE, new Headers(['X-Wild-Errors' => $data->getErrorCodes()]));
 		}
 
 		if ( $resp->page ) {
@@ -258,7 +258,7 @@ $middleware = function ($request, $handler) use ($data, $resp, $ERROR_STATUS_COD
 		}
 		$response = new Response($ERROR_STATUS_CODE);
 		$response->getBody()->write(json_encode($return, JSON_UNESCAPED_UNICODE));
-		return $response->withHeader('Content-type', BJUT_CONTENT_TYPE);
+		return $response->withHeader('Content-type', WILD_CONTENT_TYPE);
 	}
 
 	$ret = json_encode($return, JSON_UNESCAPED_UNICODE);
@@ -268,5 +268,5 @@ $middleware = function ($request, $handler) use ($data, $resp, $ERROR_STATUS_COD
 		$response->getBody()->write('{"errors":[{"message":"服务器无法编码JSON，错误编号","code":"'.(550+json_last_error()).'"}],"messages":[],"success":false,"result":null}');
 	}
 
-	return $response->withHeader('Content-type', BJUT_CONTENT_TYPE);
+	return $response->withHeader('Content-type', WILD_CONTENT_TYPE);
 };

@@ -2,7 +2,7 @@
 // https://stackoverflow.com/a/30189841
 
 
-namespace BjutHelper;
+namespace WildHelper;
 
 use Exception;
 

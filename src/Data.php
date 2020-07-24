@@ -1,7 +1,7 @@
 <?php
 
 
-namespace BjutHelper;
+namespace WildHelper;
 
 
 use DateTime;
@@ -128,7 +128,7 @@ class Data {
 	 */
 	private $API = null;
 
-	function __construct(string $l = '/opt/bjut'){
+	function __construct(string $l = '/opt/wild'){
 		$this->clear();
 		$this->location = $l;
 		$this->cache = new Cache();
@@ -298,7 +298,7 @@ class Data {
 		if ($password === '') {
 			$prevOpen = '';
 			if ($userId) {
-				$courses = $this->storage->get('/opt/bjut/courses/'.$userId);
+				$courses = $this->storage->get('/opt/wild/courses/'.$userId);
 				if (is_object($courses) && property_exists($courses, 'open')) {
 					$prevOpen = $courses->open;
 				}
@@ -326,7 +326,7 @@ class Data {
 
 		$encryptedOpen = static::base64_url_encode(Encryption::encrypt($open, $KEY, true));
 		if ($password !== '') {
-			$this->storage->set('/opt/bjut/open/'.$userId, hash('sha256', $encryptedOpen, true));
+			$this->storage->set('/opt/wild/open/'.$userId, hash('sha256', $encryptedOpen, true));
 		}
 		return [
 			'authorization' =>
@@ -573,7 +573,7 @@ class Data {
 				'2020-2021-1' => [0, 54],
 			];
 		}
-		if ($this->cache->get('BjutHelper::screenshot/'.$userId)) {
+		if ($this->cache->get('WildHelper::screenshot/'.$userId)) {
 			$resp->registration_week = [];
 		}
 		return $resp;
@@ -948,7 +948,7 @@ class Data {
 			$this->messages = ['需登录才可查看课程统计'];
 			return null;
 		}
-		if ( $this->cache->get('BjutHelper::screenshot/'.$open) ) {
+		if ( $this->cache->get('WildHelper::screenshot/'.$open) ) {
 			$this->status = false;
 			$this->errors[] = (object)[
 				'code' => 403,
@@ -1156,14 +1156,14 @@ class Data {
 	}
 
 	private function apiLogin( $limit = true ) {
-		$loginFailed = $this->cache->get('BjutHelper::Data/login/'.$this->user_id);
+		$loginFailed = $this->cache->get('WildHelper::Data/login/'.$this->user_id);
 		if($limit && $loginFailed > 2) {
 			$this->status = false;
 			$this->errors[] = (object)[
 				'code' => 1009,
 				'message' => '密码错误次数过多，您已经被屏蔽，请一小时后再试',
 			];
-			error_log( date('Y-m-d H:i:s').' '.$this->user_id.' time exceed!'."\r\n", 3, "/opt/bjut/log/pwd_wrong.txt");
+			error_log( date('Y-m-d H:i:s').' '.$this->user_id.' time exceed!'."\r\n", 3, "/opt/wild/log/pwd_wrong.txt");
 			return null;
 		}
 
@@ -1173,7 +1173,7 @@ class Data {
 				'code' => 2001,
 				'message' => '内部错误 2001',
 			];
-			error_log( date('Y-m-d H:i:s').' '.$this->user_id.' error 2001!'."\r\n", 3, "/opt/bjut/log/pwd_wrong.txt");
+			error_log( date('Y-m-d H:i:s').' '.$this->user_id.' error 2001!'."\r\n", 3, "/opt/wild/log/pwd_wrong.txt");
 			return null;
 		}
 
@@ -1203,20 +1203,20 @@ class Data {
 			if ( $e->getCode() == 1003 ) {
 				if ($limit) {
 					$this->status = false;
-					$loginFailed = $this->cache->get('BjutHelper::Data/login/'.$this->user_id);
+					$loginFailed = $this->cache->get('WildHelper::Data/login/'.$this->user_id);
 					$this->errors[] = (object)[
 						'code' => 1003,
 						'message' => '用户名或密码错误，请输入教务系统的密码。您还剩'.(2-$loginFailed).'次机会。毕业后账户密码会被教务重置，请将密码留空进行免密登录',
 					];
-					error_log( date('Y-m-d H:i:s').' '.$this->user_id.' pwd wrong!'."\r\n", 3, "/opt/bjut/log/pwd_wrong.txt");
-					$this->cache->set('BjutHelper::Data/login/'.$this->user_id, $loginFailed+1, 3600);
+					error_log( date('Y-m-d H:i:s').' '.$this->user_id.' pwd wrong!'."\r\n", 3, "/opt/wild/log/pwd_wrong.txt");
+					$this->cache->set('WildHelper::Data/login/'.$this->user_id, $loginFailed+1, 3600);
 				} else {
 					$this->status = false;
 					$this->errors[] = (object)[
 						'code' => 2008,
 						'message' => '密码错误或教务系统崩溃，请稍后刷新重试。如果持续遇到此问题，请尝试重新登录',
 					];
-					error_log( date('Y-m-d H:i:s').' '.$this->user_id.' pwd wrong! no limit'."\r\n", 3, "/opt/bjut/log/pwd_wrong.txt");
+					error_log( date('Y-m-d H:i:s').' '.$this->user_id.' pwd wrong! no limit'."\r\n", 3, "/opt/wild/log/pwd_wrong.txt");
 				}
 				return null;
 			} elseif ( $e->getCode() == 1002 ) {

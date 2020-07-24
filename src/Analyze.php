@@ -1,7 +1,7 @@
 <?php
 
 
-namespace BjutHelper;
+namespace WildHelper;
 
 if (!function_exists("array_key_last")) {
 	function array_key_last($array) {
@@ -19,7 +19,7 @@ class Analyze {
 	private array $generated_data;
 	private Storage $storage;
 
-	function __construct(string $l = '/opt/bjut'){
+	function __construct(string $l = '/opt/wild'){
 		$this->storage = new Storage();
 		$this->location = $l;
 		$this->generated_data = $this->generate();
@@ -170,7 +170,7 @@ class Analyze {
 		$courseOpenMap = [];
 
 		$success = 0;
-		$ret = $this->storage->pkrget('/opt/bjut/scores/', 100);
+		$ret = $this->storage->pkrget('/opt/wild/scores/', 100);
 		$courses_bulk = $this->storage->pkrget($this->location . '/courses/', 100);
 		while (true) {
 			foreach($ret as $stuId => $content) {
@@ -186,10 +186,10 @@ class Analyze {
 //			    }
 
 				$stuId_short = substr($stuId, 17);
-				$stuId_full = '/opt/bjut/courses/'.$stuId_short;
+				$stuId_full = '/opt/wild/courses/'.$stuId_short;
 
 				if (count($courses_bulk) == 100 && substr(array_key_last($courses_bulk), 18) < $stuId_short) {
-					$courses_bulk = $this->storage->pkrget('/opt/bjut/courses/', 100, array_key_last($courses_bulk));
+					$courses_bulk = $this->storage->pkrget('/opt/wild/courses/', 100, array_key_last($courses_bulk));
 				}
 
 				if(isset($courses_bulk[$stuId_full]) && is_object($courses_bulk[$stuId_full])) {
@@ -477,7 +477,7 @@ class Analyze {
 			$start_key = key($ret);
 			$i = count($ret);
 			if ($i < 100) break;
-			$ret = $this->storage->pkrget('/opt/bjut/scores/', 100, $start_key);
+			$ret = $this->storage->pkrget('/opt/wild/scores/', 100, $start_key);
 			error_log( date('Y-m-d H:i:s').' [Analyze] '.$start_key."\r\n" );
 		}
 

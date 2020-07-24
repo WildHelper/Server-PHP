@@ -9,9 +9,9 @@ require_once __DIR__ . '../config/Storage.php';
 require_once __DIR__ . '../config/Cache.php';
 require_once __DIR__ . '../config/Settings.php';
 
-use BjutHelper\Settings;
-use BjutHelper\Storage;
-use BjutHelper\WeChat;
+use WildHelper\Settings;
+use WildHelper\Storage;
+use WildHelper\WeChat;
 
 
 if (

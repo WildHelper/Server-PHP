@@ -1,7 +1,7 @@
 <?php
 
 
-namespace BjutHelper;
+namespace WildHelper;
 
 
 use ZfSpider\Client;
@@ -68,7 +68,7 @@ class APIs extends Client {
 		return $this->password === "\nS";
 	}
 
-	public function __construct($user, $loginParam = [], $vpn_url = 'https://vpn.bjut.edu.cn/prx/000/http/localhost/', $base_url = 'https://vpn.bjut.edu.cn/prx/000/http/gdjwgl.bjut.edu.cn/', $request_options = [], $l = '/opt/bjut')
+	public function __construct($user, $loginParam = [], $vpn_url = Settings::VPN_URL, $base_url = Settings::BASE_URL, $request_options = [], $l = '/opt/wild')
 	{
 		parent::__construct($user, $loginParam, $vpn_url, $base_url, $request_options);
 		$this->cache = new Cache();
@@ -83,7 +83,7 @@ class APIs extends Client {
 			$this->loggedIn = false;
 			return null;
 		}
-		$cookie = $this->cache->get( 'BjutHelper::cookie2/'.$this->stu_id );
+		$cookie = $this->cache->get( 'WildHelper::cookie2/'.$this->stu_id );
 		if ( $cookie ) {
 			$this->setCookieJar($cookie);
 			$this->loggedIn = true;
@@ -91,19 +91,19 @@ class APIs extends Client {
 		}
 		$ret = parent::login();
 		$this->loggedIn = true;
-		$this->cache->set( 'BjutHelper::cookie2/'.$this->stu_id, $ret, 300 );
+		$this->cache->set( 'WildHelper::cookie2/'.$this->stu_id, $ret, 300 );
 		return $ret;
 	}
 
 	public function login_vpn(string $username = Settings::VPN_USERNAME, string $password = Settings::VPN_PASSWORD)
 	{
-		$cookie = $this->cache->get( 'BjutHelper::cookie_vpn' );
+		$cookie = $this->cache->get( 'WildHelper::cookie_vpn' );
 		if ( $cookie ) {
 			$this->setCookieJar($cookie);
 			return $cookie;
 		}
 		$ret = parent::login_vpn($username, $password);
-		$this->cache->set( 'BjutHelper::cookie_vpn', $ret, 3600 );
+		$this->cache->set( 'WildHelper::cookie_vpn', $ret, 3600 );
 		return $ret;
 	}
 
@@ -390,7 +390,7 @@ class APIs extends Client {
 					$finished = $this->storage->get($this->location . '/subscribe/finished/' . $course->year . '/' . $course->term . '/' . $newId);
 					if (!$finished) {
 						$this->storage->set($filePath . '/' . $newId, true);
-						error_log( date('Y-m-d H:i:s').' [Subscribe] '.explode('?', $_SERVER['REQUEST_URI'])[0].' by '.$this->stu_id.' '.$course->name.' '.$newId."\r\n", 3, "/opt/bjut/log/log.txt");
+						error_log( date('Y-m-d H:i:s').' [Subscribe] '.explode('?', $_SERVER['REQUEST_URI'])[0].' by '.$this->stu_id.' '.$course->name.' '.$newId."\r\n", 3, "/opt/wild/log/log.txt");
 					}
 					$this->storage->set($file, $courseSelectFile);
 				}
