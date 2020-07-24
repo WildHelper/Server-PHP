@@ -107,13 +107,11 @@ $app->group('/v2', function (RouteCollectorProxy $app) use ($data, $resp) {
 		});
 
 		$app->get('/endpoint', function (Request $request, Response $response, array $args) use ($data, $resp) {
-			$resp->data = [
-				'default' => [
-					'name' => '默认',
-					'url' => Settings::API_ENDPOINT,
-					'message' => Settings::API_MESSAGE,
-				]
-			];
+			$version = Utils::getMiniProgramVersion();
+			$resp->data = Settings::API_LIST;
+			if (isset($resp->data[$version])) {
+				$resp->data['default'] = $resp->data[$version];
+			}
 			return $response;
 		});
 

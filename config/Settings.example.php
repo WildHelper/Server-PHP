@@ -33,6 +33,13 @@ class Settings
 	 */
 	public const API_ENDPOINT = 'https://wild.applinzi.com/v2/';
 	public const API_MESSAGE = '服务器永不存储你的密码';
+	public const API_LIST = [
+		'default' => [
+			'name' => '默认',
+			'url' => Settings::API_ENDPOINT,
+			'message' => Settings::API_MESSAGE,
+		],
+	];
 
 	/**
 	 * 教务地址配置
