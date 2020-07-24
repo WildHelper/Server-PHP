@@ -201,4 +201,17 @@ class Utils
 		$data->average_GPA_term = $total_value != 0 ? $total_GPA / $total_value : 0;
 		$data->average_GPA_minor = $total_value_minor != 0 ? $total_GPA_minor / $total_value_minor : 0;
 	}
+
+	public static function getMiniProgramVersion() {
+		if (isset($_SERVER['HTTP_REFERER'])) {
+			$substring = substr($_SERVER['HTTP_REFERER'], 26, -16);
+			if ($substring) {
+				$exploded = explode('/', $substring);
+				if (count($exploded) === 2) {
+					return $exploded[1];
+				}
+			}
+		}
+		return -1;
+	}
 }
