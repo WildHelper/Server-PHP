@@ -8,6 +8,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 use Slim\Psr7\Response;
 use Slim\Routing\RouteCollectorProxy;
+use WildHelper\Utils;
 
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -105,6 +106,16 @@ $app->group('/v2', function (RouteCollectorProxy $app) use ($data, $resp) {
 
 		});
 
+		$app->get('/endpoint', function (Request $request, Response $response, array $args) use ($data, $resp) {
+			$resp->data = [
+				'default' => [
+					'name' => '默认',
+					'url' => 'https://wild.applinzi.com/v2/'
+				]
+			];
+			return $response;
+		});
+
 		$app->get('/more', function (Request $request, Response $response, array $args) use ($data, $resp) {
 			$resp->data = new stdClass();
 			$resp->data->more_messages = Data::MORE_PAGE_MESSAGES;
@@ -142,18 +153,12 @@ $app->group('/v2', function (RouteCollectorProxy $app) use ($data, $resp) {
 			} else {
 				$resp->data->footer_messages[] = '+ 未获取到版本号信息';
 			}
-			if (isset($_SERVER['HTTP_REFERER'])) {
-				$substring = substr($_SERVER['HTTP_REFERER'], 26, -16);
-				if ($substring) {
-					$exploded = explode('/', $substring);
-					if (count($exploded) === 2) {
-						if (isset(Data::VERSION_NUMBER[$exploded[1]])) {
-							$resp->data->footer_messages[] = '+ 本机版本号：'.Data::VERSION_NUMBER[$exploded[1]];
-						}
-						$resp->data->footer_messages[] = '+ 本机版本序号：'.$exploded[1];
-					}
-				}
+
+			$version = Utils::getMiniProgramVersion();
+			if (isset(Data::VERSION_NUMBER[$version])) {
+				$resp->data->footer_messages[] = '+ 本机版本号：'.Data::VERSION_NUMBER[$version];
 			}
+			$resp->data->footer_messages[] = '+ 本机版本序号：'.$version;
 
 			$resp->data->open_status = -1; // 需要重新登录
 			$open = '';
