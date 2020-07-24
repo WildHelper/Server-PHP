@@ -70,7 +70,7 @@ class APIs extends Client {
 
 	public function __construct($user, $loginParam = [], $vpn_url = Settings::VPN_URL, $base_url = Settings::BASE_URL, $request_options = [], $l = '/opt/wild')
 	{
-		parent::__construct($user, $loginParam, $vpn_url, $base_url, $request_options);
+		parent::__construct($user, $loginParam, $vpn_url, $base_url, $request_options, ['timeout' => 10]);
 		$this->cache = new Cache();
 		$this->storage = new Storage();
 		$this->location = $l;
