@@ -106,8 +106,12 @@ $app->group('/v2', function (RouteCollectorProxy $app) use ($data, $resp) {
 
 		});
 
-		$app->get('/endpoint', function (Request $request, Response $response, array $args) use ($data, $resp) {
-			$version = Utils::getMiniProgramVersion();
+		$app->get('/endpoint/{version}', function (Request $request, Response $response, array $args) use ($data, $resp) {
+			if (isset($args['course_id']) && $args['course_id']) {
+				$version = $args['course_id'];
+			} else {
+				$version = Utils::getMiniProgramVersion();
+			}
 			$resp->data = Settings::API_LIST;
 			if (isset($resp->data[$version])) {
 				$resp->data['default'] = $resp->data[$version];
