@@ -112,7 +112,9 @@ $app->group('/v2', function (RouteCollectorProxy $app) use ($data, $resp) {
 			} else {
 				$version = Utils::getMiniProgramVersion();
 			}
-			$resp->data = Settings::API_LIST;
+			$resp->data = [
+				'default' => Settings::API_LIST['default']
+			];
 			if (isset($resp->data[$version])) {
 				$resp->data['default'] = $resp->data[$version];
 			}
