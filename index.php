@@ -115,8 +115,8 @@ $app->group('/v2', function (RouteCollectorProxy $app) use ($data, $resp) {
 			$resp->data = [
 				'default' => Settings::API_LIST['default']
 			];
-			if (isset($resp->data[$version])) {
-				$resp->data['default'] = $resp->data[$version];
+			if (isset(Settings::API_LIST[$version])) {
+				$resp->data['default'] = Settings::API_LIST[$version];
 			}
 			return $response;
 		});
