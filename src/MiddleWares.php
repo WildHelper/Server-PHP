@@ -63,7 +63,7 @@ $middleware = function ($request, $handler) use ($data, $resp, $ERROR_STATUS_COD
 		} else if (substr($uriPath, 0, 13) === '/v2/settings/') {
 			set_time_limit(1);
 			if (
-				($uriPath === '/v2/settings/more' || $uriPath === '/v2/settings/endpoint') && (
+				($uriPath === '/v2/settings/more' || substr($uriPath, 0, 22) === '/v2/settings/endpoint/') && (
 					empty($authHeader) ||
 					(is_array($authHeader) && count($authHeader) > 0 && (!$authHeader[0] || $authHeader[0] === '[object Null]' || $authHeader[0] === '[object undefined]'))
 				)
