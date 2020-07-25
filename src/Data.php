@@ -307,7 +307,7 @@ class Data {
 				$this->status = false;
 				$this->errors[] = (object)[
 					'code' => 1011,
-					'message' => '你暂时无法使用此程序，详情请进入 “关于” 页面查看',
+					'message' => '您没有绑定过微信号或绑定了其他微信号',
 				];
 				return null;
 			}
@@ -764,7 +764,7 @@ class Data {
 					$this->status = false;
 					$this->errors[] = (object)[
 						'code' => 1011,
-						'message' => '你暂时无法使用此程序，详情请进入 “关于” 页面查看',
+						'message' => '您没有绑定过微信号或绑定了其他微信号',
 					];
 					return null;
 				}
