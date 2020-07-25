@@ -765,8 +765,8 @@ class Data {
 					$prevOpen = $courseSelectFile->open;
 				}
 				$open = '';
-				if (isset($_SERVER['HTTP_X_BJUT_OPEN'])) {
-					$open = Encryption::decrypt( static::base64_url_decode($_SERVER['HTTP_X_BJUT_OPEN']), Data::ENCRYPTION_KEY, true );
+				if (isset($_SERVER['HTTP_X_WILD_OPEN'])) {
+					$open = Encryption::decrypt( static::base64_url_decode($_SERVER['HTTP_X_WILD_OPEN']), Data::ENCRYPTION_KEY, true );
 				}
 				if (!$prevOpen || !$open || $prevOpen !== $open) {
 					$this->status = false;

@@ -20,7 +20,7 @@ if (
 ) {
 	$time_start = microtime(true);
 	$storage = new Storage();
-	$newCourses = $storage->pkrget('/opt/bjut/subscribe/started', 1);
+	$newCourses = $storage->pkrget('/opt/wild/subscribe/started', 1);
 	foreach ($newCourses as $key => $_) {
 		try {
 			$success = 0;
@@ -30,9 +30,9 @@ if (
 			$courseId = $arr[count($arr) - 1];
 			$term = $arr[count($arr) - 2];
 			$year = $arr[count($arr) - 3];
-			$storage->set('/opt/bjut/subscribe/finished/'.$year.'/'.$term.'/'.$courseId, 1);
-			$storage->delete('/opt/bjut/subscribe/started/'.$year.'/'.$term.'/'.$courseId);
-			$newCourse = $storage->get('/opt/bjut/subscribe/all/'.$year.'/'.$term.'/'.$courseId);
+			$storage->set('/opt/wild/subscribe/finished/'.$year.'/'.$term.'/'.$courseId, 1);
+			$storage->delete('/opt/wild/subscribe/started/'.$year.'/'.$term.'/'.$courseId);
+			$newCourse = $storage->get('/opt/wild/subscribe/all/'.$year.'/'.$term.'/'.$courseId);
 			if (is_object($newCourse)) {
 				$name = $newCourse->course->name;
 				$id = $newCourse->course->id;
