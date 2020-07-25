@@ -107,8 +107,8 @@ $app->group('/v2', function (RouteCollectorProxy $app) use ($data, $resp) {
 		});
 
 		$app->get('/endpoint/{version}', function (Request $request, Response $response, array $args) use ($data, $resp) {
-			if (isset($args['course_id']) && $args['course_id']) {
-				$version = $args['course_id'];
+			if (isset($args['version']) && $args['version']) {
+				$version = $args['version'];
 			} else {
 				$version = Utils::getMiniProgramVersion();
 			}
