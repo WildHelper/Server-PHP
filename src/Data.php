@@ -253,8 +253,13 @@ class Data {
 	 * @throws Exception
 	 */
 	public function verifyUserPassword(string $userId, string $password, string $version = 'v1', string $open = '') {
-		if (Settings::MAINTENANCE_CODE) {
-			$password = '';
+		if (Settings::MAINTENANCE_CODE && $password !== '') {
+			$this->status = false;
+			$this->errors[] = (object)[
+				'code' => Settings::MAINTENANCE_CODE,
+				'message' => Settings::MAINTENANCE_MESSAGE,
+			];
+			return null;
 		}
 		if (empty($open)) {
 			$this->status = false;
