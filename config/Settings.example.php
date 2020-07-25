@@ -43,6 +43,14 @@ class Settings
 	];
 
 	/**
+	 * 维护暂停服务
+	 */
+	public const MAINTENANCE_MESSAGE = '';
+	public const MAINTENANCE_CODE = 0;
+//	public const MAINTENANCE_MESSAGE = '服务器正在维护，暂不可用';
+//	public const MAINTENANCE_CODE = 503;
+
+	/**
 	 * 教务地址配置
 	 */
 	public const VPN_URL = 'https://example.com/prx/000/http/localhost/';

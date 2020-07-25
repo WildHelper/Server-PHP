@@ -1179,6 +1179,14 @@ class Data {
 
 		$this->API = new APIs( ['stu_id' => $this->user_id, 'stu_pwd' => $this->user_pass] );
 		try {
+			if (Settings::MAINTENANCE_CODE) {
+				$this->status = false;
+				$this->errors[] = (object)[
+					'code' => Settings::MAINTENANCE_CODE,
+					'message' => Settings::MAINTENANCE_MESSAGE,
+				];
+				return false;
+			}
 			$this->API->login_vpn();
 		} catch (SpiderException $e) {
 			if ( $e->getCode() == 1010 ) {
