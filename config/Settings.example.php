@@ -38,6 +38,7 @@ class Settings
 			'name' => '默认',
 			'url' => Settings::API_ENDPOINT,
 			'message' => Settings::API_MESSAGE,
+			'trusted' => true,
 		],
 	];
 
