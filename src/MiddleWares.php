@@ -99,7 +99,7 @@ $middleware = function ($request, $handler) use ($data, $resp, $ERROR_STATUS_COD
 
 				$auth = $data->auth($authKey, null);
 
-				if (!$data->getApi()->isNoPassword() && is_string($auth)) {
+				if (!is_null($auth) && is_object($data->getApi()) && !$data->getApi()->isNoPassword() && is_string($auth)) {
 					$prevOpen = $data->getStorage()->get('/opt/wild/open/'.$auth);
 					if (!$prevOpen) {
 						$data->getStorage()->set('/opt/wild/open/'.$auth, $currentOpen);
