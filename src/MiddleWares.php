@@ -65,6 +65,7 @@ $middleware = function ($request, $handler) use ($data, $resp, $ERROR_STATUS_COD
 			if (substr($uriPath, 0, 22) === '/v2/settings/endpoint/') {
 				// API 请求页不要求验证
 				$auth = '';
+				$userId = [''];
 			} else if (
 				$uriPath === '/v2/settings/more' && (
 					empty($authHeader) ||
